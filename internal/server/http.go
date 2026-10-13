@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v5/middleware"
 
 	"spotsync-backend/internal/config"
+	"spotsync-backend/internal/httpResponse"
 )
 
 type Server struct {
@@ -20,7 +21,10 @@ type Server struct {
 }
 
 func New(cfg *config.Config) *Server {
-	e := echo.New()
+	e := echo.NewWithConfig(echo.Config{
+		HTTPErrorHandler: httpResponse.ErrorHandler,
+		Validator:        httpResponse.NewValidator(),
+	})
 
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestLogger())
